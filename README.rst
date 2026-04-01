@@ -1,3 +1,14 @@
+V4L2 Update
+===================================
+This is a patched fork of the obs-studio which forces v4l2 camera property changes to always use VIDEOC_S_CTRL to make writes to V4L2 devices. I kept running into issues where only the built in Camera Properties GUI for my OBS V4L2 source would apply changes, while websocket and plugins would not.
+
+What this patch changes:
+
+- Adds a reusable v4l2_apply_controls() helper in v4l2-controls.c.
+- Enumerates valid controls, pulls desired values from OBS settings, compares against current device values with VIDIOC_G_CTRL, and only writes with VIDIOC_S_CTRL when needed.
+- Calls that helper from v4l2_update() so startup, websocket, Move, and any other non-UI setting updates all go through a real device apply step.
+
+
 OBS Studio <https://obsproject.com>
 ===================================
 
